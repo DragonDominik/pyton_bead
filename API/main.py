@@ -37,6 +37,6 @@ A dokumentáció pedig itt:
 app = FastAPI()
 app.include_router(routes_router)
 
-@app.get('/')
+@app.get('/', response_model=dict)
 def route():
     return {'Wellcome in ': ShopName}    

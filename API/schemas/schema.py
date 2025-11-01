@@ -1,4 +1,5 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr, Field, field_validator
+from typing import List
 
 '''
 
@@ -15,13 +16,39 @@ Az osztályokban az adatok legyenek validálva.
 
 '''
 
-ShopName='Bolt'
+ShopName='PyShop'
 
 class User(BaseModel):
-    pass
+    id: int = Field(..., description="Unique identifier for user")
+    name: str = Field(..., description="Name of user")
+    email: EmailStr = Field(..., description="Users email address")
 
-class Basket(BaseModel):
-    pass
+    @field_validator('id')
+    def check_non_negative(cls, v):
+        if v < 0:
+            raise ValueError('id cannot be negative')
+        return v
 
 class Item(BaseModel):
-    pass
+    item_id: int = Field(..., description="The unique ID of the item")
+    name: str = Field(..., description="The name of the item")
+    brand: str = Field(..., description="The brand of the item")
+    price: float = Field(..., description="The price of the item, must be non-negative")
+    quantity: int = Field(..., description="The quantity of the item, must be non-negative")
+
+    @field_validator('item_id', 'price', 'quantity')
+    def check_non_negative(cls, v, info):
+        if v < 0:
+            raise ValueError(f"{info.field_name} cannot be negative")
+        return v
+
+class Basket(BaseModel):
+    id: int = Field(..., description="Unique identifier for basket")
+    user_id: int = Field(..., description="Basket owner id")
+    items: List[Item] = Field(default_factory=list, description="List of Items in Basket")
+
+    @field_validator('id', 'user_id')
+    def check_non_negative(cls, v, info):
+        if v < 0:
+            raise ValueError(f"{info.field_name} cannot be negative")
+        return v

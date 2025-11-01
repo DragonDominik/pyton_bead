@@ -1,5 +1,6 @@
 import json
 from typing import Dict, Any, List
+import os
 
 '''
 Útmutató a féjl használatához:
@@ -44,19 +45,32 @@ from filereader import (
 '''
 
 # A JSON fájl elérési útja
-JSON_FILE_PATH = ""
+JSON_FILE_PATH = os.path.join(os.path.dirname(__file__), "data.json")
 
 def load_json() -> Dict[str, Any]:
-    pass
+    with open(JSON_FILE_PATH, "r", encoding="utf-8") as file: 
+        return json.load(file)
 
 def get_user_by_id(user_id: int) -> Dict[str, Any]:
-    pass
+    data = load_json()
+    for user in data["Users"]:
+        if user["id"] == user_id: return user
+    raise ValueError(f"User with ID {user_id} doesn't exist")
 
 def get_basket_by_user_id(user_id: int) -> List[Dict[str, Any]]:
-    pass
+    data = load_json()
+    for basket in data["Baskets"]:
+        if basket["user_id"] == user_id: return basket["items"]
+    raise ValueError(f"Basket with User ID {user_id} doesn't exist")
+
 
 def get_all_users() -> List[Dict[str, Any]]:
-    pass
+    data = load_json()
+    return data["Users"]
 
 def get_total_price_of_basket(user_id: int) -> float:
-    pass
+    try:
+        items = get_basket_by_user_id(user_id) #make sure user has basket
+        return sum(float(item["quantity"]) * float(item["price"]) for item in items)
+    except ValueError as e:
+        raise ValueError(str(e))
