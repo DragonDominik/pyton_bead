@@ -85,7 +85,5 @@ def add_item_to_basket(user_id: int, item: Dict[str, Any]) -> None:
     userBasket = next((basket for basket in data["Baskets"] if basket["user_id"] == user_id), None)
     if userBasket is None:
         raise ValueError(f"Basket for user ID {user_id} doesn't exist")
-    if "items" not in userBasket or not isinstance(userBasket["items"], list):
-        userBasket["items"] = []
     userBasket["items"].append(item)
     save_json(data)

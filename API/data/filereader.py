@@ -45,7 +45,7 @@ from filereader import (
 '''
 
 # A JSON fájl elérési útja
-JSON_FILE_PATH = os.path.join(os.path.dirname(__file__), "data.json")
+JSON_FILE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "data.json"))
 
 def load_json() -> Dict[str, Any]:
     with open(JSON_FILE_PATH, "r", encoding="utf-8") as file: 

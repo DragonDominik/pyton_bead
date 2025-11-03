@@ -78,7 +78,7 @@ def updateitem(userid: int, itemid: int, updateItem: Item) -> Basket:
 
         save_json(data)
 
-        return JSONResponse(content=basket, status_code=201)
+        return JSONResponse(content=basket, status_code=200)
 
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
@@ -100,7 +100,7 @@ def deleteitem(userid: int, itemid: int) -> Basket:
         
         save_json(data)
 
-        return JSONResponse(content=basket, status_code=201)
+        return JSONResponse(content=basket, status_code=200)
 
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
